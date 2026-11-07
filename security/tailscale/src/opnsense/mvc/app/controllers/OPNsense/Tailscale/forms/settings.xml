@@ -54,6 +54,6 @@
         <label>Disable SNAT</label>
         <advanced>true</advanced>
         <type>checkbox</type>
-        <help>Disable source NAT to disable subnet routing (experimental).</help>
+        <help>Forward advertised subnet traffic in the kernel without source NAT, so hosts behind this node see the original tailnet address. Traffic arriving on the Tailscale interface is then subject to firewall rules, and when advertised as an exit node, outbound NAT for 100.64.0.0/10 (and fd7a:115c:a1e0::/48 for IPv6) must be configured manually (experimental).</help>
     </field>
 </form>

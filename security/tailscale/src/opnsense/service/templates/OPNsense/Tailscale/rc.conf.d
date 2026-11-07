@@ -26,6 +26,11 @@ tailscaled_port="{{ OPNsense.tailscale.settings.listenPort }}"
 {%    else %}
 {%      do up_args.append("--accept-routes=false") %}
 {%    endif %}
+{%    if helpers.exists('OPNsense.tailscale.settings.disableSNAT') and OPNsense.tailscale.settings.disableSNAT|default("0") == "1" %}
+{%      do up_args.append("--snat-subnet-routes=false") %}
+{%    else %}
+{%      do up_args.append("--snat-subnet-routes=true") %}
+{%    endif %}
 {%    if helpers.exists('OPNsense.tailscale.settings.acceptDNS') and OPNsense.tailscale.settings.acceptDNS|default("0") == "1" %}
 {%      do up_args.append("--accept-dns") %}
 {%    else %}

@@ -6,6 +6,11 @@ https://tailscale.com/
 Plugin Changelog
 ================
 
+1.5
+
+* fix "Disable SNAT" with native FreeBSD subnet routing by passing --snat-subnet-routes to tailscale (requires tailscale 1.104 or newer)
+* clarify "Disable SNAT" help text
+
 1.4
 
 * set pre-auth key field in UI to optional, enables registration via pre-auth key or AuthURL from status page

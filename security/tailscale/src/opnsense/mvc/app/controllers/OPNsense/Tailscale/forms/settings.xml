@@ -50,10 +50,17 @@
         <help>Allow Tailscale to manage SSH connections in your tailnet.</help>
     </field>
     <field>
+        <id>settings.kernelRouting</id>
+        <label>Kernel subnet routing</label>
+        <advanced>true</advanced>
+        <type>checkbox</type>
+        <help>Forward advertised subnet and exit node traffic in the kernel instead of Tailscale's userspace network stack, for higher throughput. Traffic arriving on the Tailscale interface is then subject to firewall rules. Unless SNAT is disabled, Tailscale translates this traffic to the address of each outgoing interface; interfaces without an address when Tailscale starts are not covered until it restarts (experimental).</help>
+    </field>
+    <field>
         <id>settings.disableSNAT</id>
         <label>Disable SNAT</label>
         <advanced>true</advanced>
         <type>checkbox</type>
-        <help>Forward advertised subnet traffic in the kernel without source NAT, so hosts behind this node see the original tailnet address. Traffic arriving on the Tailscale interface is then subject to firewall rules, and when advertised as an exit node, outbound NAT for 100.64.0.0/10 (and fd7a:115c:a1e0::/48 for IPv6) must be configured manually (experimental).</help>
+        <help>Do not source NAT forwarded traffic, so hosts behind this node see the original tailnet address. Requires kernel subnet routing. When advertised as an exit node, outbound NAT for 100.64.0.0/10 (and fd7a:115c:a1e0::/48 for IPv6) must then be configured manually (experimental).</help>
     </field>
 </form>

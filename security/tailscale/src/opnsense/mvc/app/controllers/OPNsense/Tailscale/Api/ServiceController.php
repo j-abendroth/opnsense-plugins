@@ -41,4 +41,30 @@ class ServiceController extends ApiMutableServiceControllerBase
     protected static $internalServiceEnabled = 'enabled';
     protected static $internalServiceTemplate = 'OPNsense/Tailscale';
     protected static $internalServiceName = 'tailscale';
+
+    /**
+     * Reload the filter only when the "tailscale" pf anchor references in the
+     * running ruleset do not match what the current settings want.
+     *
+     * tailscaled only uses these anchors when it routes subnets in the kernel
+     * with SNAT enabled: on start it loads its per-interface NAT rules into
+     * them, and it refuses to reload the main ruleset to add the references
+     * itself. If they are missing at that point it does not retry until it is
+     * restarted. The references are therefore wanted only while the service is
+     * enabled, kernel routing is on and SNAT is not disabled.
+     *
+     * - Wanted but missing: reload to add them. This runs while tailscaled is
+     *   stopped, so they are in place before it starts and loads its rules.
+     * - Present but no longer wanted (kernel routing, SNAT or the service was
+     *   switched off): reload to remove them, so a stale SNAT preference in
+     *   tailscaled cannot silently translate forwarded traffic.
+     * - Already matching: skip the reload, so applying unrelated changes, or
+     *   running with the default userspace routing, leaves the firewall alone.
+     */
+    protected function invokeFirewallReload()
+    {
+        $present = trim((new Backend())->configdRun('tailscale pf-anchor-status')) === 'present';
+
+        return $this->getModel()->pfAnchorsWanted() !== $present;
+    }
 }

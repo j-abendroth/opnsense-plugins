@@ -53,6 +53,23 @@ function tailscale_services()
     return $services;
 }
 
+function tailscale_firewall($fw)
+{
+    if (!(new \OPNsense\Tailscale\Settings())->pfAnchorsWanted()) {
+        return;
+    }
+
+    /*
+     * With kernel subnet routing and SNAT, tailscaled loads its NAT rules into
+     * this exact anchor. It checks for both references and refuses to reload
+     * the main ruleset to add them itself. Leaving them out when SNAT is
+     * disabled makes a stale SNAT preference fail loudly instead of silently
+     * translating forwarded traffic.
+     */
+    $fw->registerAnchor('tailscale', 'nat');
+    $fw->registerAnchor('tailscale', 'fw');
+}
+
 function tailscale_devices()
 {
     return [[

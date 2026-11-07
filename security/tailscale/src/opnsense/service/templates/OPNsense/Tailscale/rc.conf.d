@@ -3,8 +3,8 @@
 #
 {%  if not helpers.empty('OPNsense.tailscale.settings.enabled')  %}
 tailscaled_enable="YES"
-{%    if helpers.exists('OPNsense.tailscale.settings.disableSNAT') and OPNsense.tailscale.settings.disableSNAT|default("0") == "1" %}
-# see - https://github.com/tailscale/tailscale/issues/5573#issuecomment-1584695981
+{%    if helpers.exists('OPNsense.tailscale.settings.kernelRouting') and OPNsense.tailscale.settings.kernelRouting|default("0") == "1" %}
+# native kernel subnet routing, see https://github.com/tailscale/tailscale/pull/21060
 tailscaled_env="TS_DEBUG_NETSTACK_SUBNETS=0"
 {%    endif %}
 tailscaled_up_args_ext=

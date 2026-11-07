@@ -1,7 +1,7 @@
 <model>
     <mount>//OPNsense/tailscale/settings</mount>
     <description>Tailscale general settings</description>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <items>
         <enabled type="BooleanField">
             <Default>0</Default>
@@ -32,6 +32,10 @@
             <Default>0</Default>
             <Required>Y</Required>
         </enableSSH>
+        <kernelRouting type="BooleanField">
+            <Default>0</Default>
+            <Required>Y</Required>
+        </kernelRouting>
         <disableSNAT type="BooleanField">
             <Default>0</Default>
             <Required>Y</Required>

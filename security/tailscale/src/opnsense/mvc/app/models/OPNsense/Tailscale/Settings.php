@@ -29,7 +29,39 @@
 namespace OPNsense\Tailscale;
 
 use OPNsense\Base\BaseModel;
+use OPNsense\Base\Messages\Message;
 
 class Settings extends BaseModel
 {
+    /**
+     * whether tailscaled needs the "tailscale" pf anchors, which it only
+     * uses to load its SNAT rules when routing subnets in the kernel
+     * @return bool
+     */
+    public function pfAnchorsWanted()
+    {
+        return (string)$this->enabled == '1' && (string)$this->kernelRouting == '1' &&
+            (string)$this->disableSNAT != '1';
+    }
+
+    public function performValidation($validateFullModel = false)
+    {
+        $messages = parent::performValidation($validateFullModel);
+
+        if (
+            $validateFullModel ||
+            $this->kernelRouting->isFieldChanged() ||
+            $this->disableSNAT->isFieldChanged()
+        ) {
+            /* userspace (netstack) subnet routing cannot preserve source addresses */
+            if ((string)$this->disableSNAT == '1' && (string)$this->kernelRouting != '1') {
+                $messages->appendMessage(new Message(
+                    gettext('Disabling SNAT requires kernel subnet routing.'),
+                    $this->disableSNAT->getInternalXMLTagName()
+                ));
+            }
+        }
+
+        return $messages;
+    }
 }

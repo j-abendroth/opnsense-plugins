@@ -10,6 +10,8 @@ Plugin Changelog
 
 * fix "Disable SNAT" with native FreeBSD subnet routing by passing --snat-subnet-routes to tailscale (requires tailscale 1.104 or newer)
 * clarify "Disable SNAT" help text
+* add "Kernel subnet routing" option, using the "tailscale" pf anchors for SNAT unless "Disable SNAT" is set
+* existing "Disable SNAT" configurations are migrated to enable kernel subnet routing, which they used before
 
 1.4
 
